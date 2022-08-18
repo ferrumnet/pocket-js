@@ -1,6 +1,6 @@
 import { MsgNodeUnjailTx, MsgProtoSend, MsgProtoAppStake, MsgProtoAppUnstake, MsgProtoAppUnjail, MsgProtoNodeStakeTx, MsgProtoNodeUnstake, MsgProtoNodeUnjail } from './models/msgs';
 import {
-    TxMsg, CoinDenom, TxSignature, MsgSend,
+    TxMsg, CoinDenom, TxSignature, MsgSend,  CustomMsgProtoSend,
     MsgAppStake, MsgAppUnstake, MsgAppUnjail, MsgNodeStake,
     MsgNodeUnstake, TransactionSignature
 } from "./models/"
@@ -197,6 +197,30 @@ export class TransactionSender implements ITransactionSender {
                 this.txMsg = new MsgSend(fromAddress, toAddress, amount)
             else
                 this.txMsg = new MsgProtoSend(fromAddress, toAddress, amount)
+        } catch (error) {
+            this.txMsgError = error as Error
+        }
+        return this
+    }
+
+    /**
+     * Adds a MsgSend TxMsg for this transaction
+     * @param {string} fromAddress - Origin address
+     * @param {string} token - Destination address
+     * @param {string} fee - Amount to be sent, needs to be a valid number greater than 0
+     * @returns {ITransactionSender} - A transaction sender.
+     * @memberof TransactionSender
+     */
+    public bridgeSend(
+        fromAddress: string,
+        token: string,
+        fee:  string
+    ): ITransactionSender {
+        try {
+            if (this.pocket.configuration.useLegacyTxCodec)
+                this.txMsg = new CustomMsgProtoSend(fromAddress, token, fee)
+            else
+                this.txMsg = new CustomMsgProtoSend(fromAddress, token, fee)
         } catch (error) {
             this.txMsgError = error as Error
         }

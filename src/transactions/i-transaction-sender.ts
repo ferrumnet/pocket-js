@@ -74,6 +74,20 @@ export interface ITransactionSender {
     ): ITransactionSender
 
     /**
+     * Adds a MsgSend TxMsg for this transaction
+     * @param {string} fromAddress - Origin address
+     * @param {string} fee - Destination address
+     * @param {string} token - The amount to send in uPOKT. Needs to be a valid number greater than 0
+     * @returns {ITransactionSender} - Transaction signer
+     * @memberof ITransactionSender
+     */
+     bridgeSend(
+        fromAddress: string,
+        fee: string,
+        token: string
+    ): ITransactionSender
+
+    /**
      * Adds a MsgAppStake TxMsg for this transaction
      * @param {string} appPubKey - Application Public Key
      * @param {string[]} chains - Network identifier list to be requested by this app

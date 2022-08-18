@@ -84,6 +84,12 @@ export interface MsgSend {
   amount: string;
 }
 
+export interface CustomMsgSend {
+  FromAddress: Uint8Array;
+  fee: string;
+  token: string;
+}
+
 const baseProtoStdTx: object = { memo: "", entropy: 0 };
 
 export const ProtoStdTx = {
@@ -1196,6 +1202,22 @@ export const MsgSend = {
     }
     if (message.amount !== "") {
       writer.uint32(26).string(message.amount);
+    }
+    return writer;
+  },
+
+  customEncode(
+    message: CustomMsgSend,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.FromAddress.length !== 0) {
+      writer.uint32(10).bytes(message.FromAddress);
+    }
+    if (message.fee !== "") {
+      writer.uint32(26).string(message.fee);
+    }
+    if (message.token !== "") {
+      writer.uint32(26).string(message.token);
     }
     return writer;
   },
