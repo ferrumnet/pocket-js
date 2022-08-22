@@ -18,6 +18,12 @@ export interface ProtoStdSignature {
   Signature: Uint8Array;
 }
 
+export interface MsgSetFee {
+  fromAddress: Uint8Array;
+  token: string;
+  fee10000: number;
+}
+
 export interface StdSignDoc {
   ChainID: string;
   fee: Uint8Array;
@@ -1186,6 +1192,93 @@ export const MsgNodeUnjail8 = {
     return message;
   },
 };
+
+const baseMsgSetFee: object = { token: "", fee10000: 0 };
+
+export const MsgSetFee = {
+  encode(
+    message: MsgSetFee,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.fromAddress.length !== 0) {
+      writer.uint32(10).bytes(message.fromAddress);
+    }
+    if (message.token !== "") {
+      writer.uint32(18).string(message.token);
+    }
+    if (message.fee10000 !== 0) {
+      writer.uint32(24).uint64(message.fee10000);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgSetFee {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseMsgSetFee } as MsgSetFee;
+    message.fromAddress = new Uint8Array();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.fromAddress = reader.bytes();
+          break;
+        case 2:
+          message.token = reader.string();
+          break;
+        case 3:
+          message.fee10000 = longToNumber(reader.uint64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgSetFee {
+    const message = { ...baseMsgSetFee } as MsgSetFee;
+    if (object.fromAddress !== undefined && object.fromAddress !== null) {
+      message.fromAddress = bytesFromBase64(object.fromAddress);
+    } else {
+      message.fromAddress = new Uint8Array();
+    }
+    if (object.token !== undefined && object.token !== null) {
+      message.token = String(object.token);
+    } else {
+      message.token = "";
+    }
+    if (object.fee10000 !== undefined && object.fee10000 !== null) {
+      message.fee10000 = Number(object.fee10000);
+    } else {
+      message.fee10000 = 0;
+    }
+    return message;
+  },
+
+  toJSON(message: MsgSetFee): unknown {
+    const obj: any = {};
+    message.fromAddress !== undefined &&
+      (obj.fromAddress = base64FromBytes(
+        message.fromAddress !== undefined
+          ? message.fromAddress
+          : new Uint8Array()
+      ));
+    message.token !== undefined && (obj.token = message.token);
+    message.fee10000 !== undefined && (obj.fee10000 = message.fee10000);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<MsgSetFee>): MsgSetFee {
+    const message = { ...baseMsgSetFee } as MsgSetFee;
+    message.fromAddress = object.fromAddress ?? new Uint8Array();
+    message.token = object.token ?? "";
+    message.fee10000 = object.fee10000 ?? 0;
+    return message;
+  },
+};
+
 
 const baseMsgSend: object = { amount: "" };
 

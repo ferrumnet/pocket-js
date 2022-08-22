@@ -11,6 +11,12 @@ message ProtoStdTx {
     int64 entropy = 5;
 }
 
+message MsgSetFee {
+  bytes fromAddress = 1;
+  string token = 2;
+  uint64 fee10000 = 3;
+}
+
 message ProtoStdSignature {
     bytes publicKey = 1;
     bytes Signature = 2;

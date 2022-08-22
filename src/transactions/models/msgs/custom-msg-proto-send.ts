@@ -1,4 +1,4 @@
-import { MsgSend, CustomMsgSend } from '../proto/generated/tx-signer';
+import { MsgSend, CustomMsgSend, MsgSetFee } from '../proto/generated/tx-signer';
 import { Any } from '../proto/generated/google/protobuf/any';
 import { TxMsg } from "./tx-msg"
 
@@ -53,17 +53,17 @@ export class CustomMsgProtoSend extends TxMsg {
      * @memberof CustomMsgSend
      */
     public toStdTxMsgObj(): any {
-        const data = { FromAddress: Buffer.from(this.fromAddress, "hex"), token: this.token, fee: this.fee }
+        const data = { fromAddress: Buffer.from(this.fromAddress, "hex"), token: this.token, fee10000: Number(this.fee) }
 
         const result = Any.fromJSON({
             "typeUrl": this.KEY,
-            "value": Buffer.from(MsgSend.customEncode(data).finish()).toString("base64")
+            "value": Buffer.from(MsgSetFee.encode(data).finish()).toString("base64")
         });
 
         return result;
     }
 
     static decodeStdTxMsgValue(value: string): any {
-        return MsgSend.decode(Buffer.from(value, 'base64'))
+        return MsgSetFee.decode(Buffer.from(value, 'base64'))
     }
 }
