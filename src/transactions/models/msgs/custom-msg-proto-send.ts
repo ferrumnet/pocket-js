@@ -40,8 +40,8 @@ export class CustomMsgSetFee extends TxMsg {
         return { 
             type: this.AMINO_KEY, 
             value: { 
-                fee: this.fee,
-                from_address: this.fromAddress.toLowerCase(), 
+                fee10000: this.fee,
+                fromAddress: this.fromAddress.toLowerCase(), 
                 token: this.token.toLowerCase()
             } 
         }
