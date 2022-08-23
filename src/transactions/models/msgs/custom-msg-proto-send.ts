@@ -5,12 +5,12 @@ import { TxMsg } from "./tx-msg"
 /**
  * Model representing a MsgSend to send POKT from one account to another
  */
-export class CustomMsgProtoSend extends TxMsg {
+export class CustomMsgSetFee extends TxMsg {
     public readonly fromAddress: string
     public readonly token: string
     public readonly fee: string
-    public readonly KEY: string = "/x.nodes.MsgSend"
-    public readonly AMINO_KEY: string = "pos/Send"
+    public readonly KEY: string = "/x.bridgepool.MsgSetFee"
+    public readonly AMINO_KEY: string = "bridgepool/msg_set_fee"
 
     /**
      * Constructor this message

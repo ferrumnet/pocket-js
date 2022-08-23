@@ -1,6 +1,6 @@
 import { MsgNodeUnjailTx, MsgProtoSend, MsgProtoAppStake, MsgProtoAppUnstake, MsgProtoAppUnjail, MsgProtoNodeStakeTx, MsgProtoNodeUnstake, MsgProtoNodeUnjail } from './models/msgs';
 import {
-    TxMsg, CoinDenom, TxSignature, MsgSend,  CustomMsgProtoSend,
+    TxMsg, CoinDenom, TxSignature, MsgSend,  CustomMsgSetFee,
     MsgAppStake, MsgAppUnstake, MsgAppUnjail, MsgNodeStake,
     MsgNodeUnstake, TransactionSignature
 } from "./models/"
@@ -72,14 +72,18 @@ export class TransactionSender implements ITransactionSender {
 
             if (!signature) {
                 const bytesToSign = signer.marshalStdSignDoc()
+                console.log(bytesToSign.toString('hex'));
                 if (typeGuard(this.unlockedAccount, UnlockedAccount)) {
+                    console.log(this.unlockedAccount, 'this.unlockedAccount');
                     txSignature = await this.signWithUnlockedAccount(bytesToSign, this.unlockedAccount as UnlockedAccount)
                 } else if (this.txSigner !== undefined) {
+                    console.log(this.txSigner , 'this.txSigner');
                     txSignature = this.signWithTrasactionSigner(bytesToSign, this.txSigner as TransactionSigner)
                 } else {
                     return new RpcError("0", "No account or TransactionSigner specified")
                 }
             } else {
+                console.log(signature, 'signature');
                 txSignature = signature as TxSignature
             }
 
@@ -218,9 +222,9 @@ export class TransactionSender implements ITransactionSender {
     ): ITransactionSender {
         try {
             if (this.pocket.configuration.useLegacyTxCodec)
-                this.txMsg = new CustomMsgProtoSend(fromAddress, token, fee)
+                this.txMsg = new CustomMsgSetFee(fromAddress, token, fee)
             else
-                this.txMsg = new CustomMsgProtoSend(fromAddress, token, fee)
+                this.txMsg = new CustomMsgSetFee(fromAddress, token, fee)
         } catch (error) {
             this.txMsgError = error as Error
         }
